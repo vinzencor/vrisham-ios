@@ -1,0 +1,28 @@
+workflows:
+  ios-workflow:
+    name: iOS Build
+    max_build_duration: 60
+    environment:
+      vars:
+        XCODE_WORKSPACE: "ios/YourApp.xcworkspace"
+        XCODE_SCHEME: "Vrisham App"
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install dependencies
+        script: |
+          npm install
+          cd ios
+          pod install
+      - name: Build iOS
+        script: |
+          xcodebuild clean -workspace $XCODE_WORKSPACE -scheme $XCODE_SCHEME -sdk iphoneos -configuration Release archive -archivePath $HOME/Library/Developer/Xcode/Archives/YourApp.xcarchive
+
+    artifacts:
+      - build/ios/**/*.ipa
+
+    publishing:
+      app_store_connect:
+        api_key_id: $APP_STORE_API_KEY_ID
+        issuer_id: $APP_STORE_ISSUER_ID
+        key: $APP_STORE_PRIVATE_KEY

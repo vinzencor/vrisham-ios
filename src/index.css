@@ -1,0 +1,334 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply antialiased;
+}
+
+#root {
+  @apply min-h-screen flex flex-col;
+}
+
+/* Homepage Urgent Harvest specific styling */
+.urgent-harvest-container .grid {
+  gap: 0.5rem !important; /* Reduce gap between cards */
+}
+
+@media (min-width: 768px) {
+  .urgent-harvest-container .grid {
+    gap: 0.75rem !important; /* Slightly larger gap on medium screens and up */
+  }
+}
+
+/* Compact product card optimizations for homepage */
+.urgent-harvest-container .bg-white {
+  /* Ensure cards are as compact as possible */
+}
+
+.urgent-harvest-container .p-2 {
+  padding: 0.375rem !important; /* Reduce padding from 0.5rem to 0.375rem */
+}
+
+.urgent-harvest-container .mt-1 {
+  margin-top: 0.125rem !important; /* Reduce margin significantly */
+}
+
+.urgent-harvest-container .pt-1 {
+  padding-top: 0.125rem !important; /* Reduce padding-top */
+}
+
+.urgent-harvest-container .mb-1 {
+  margin-bottom: 0.125rem !important; /* Reduce margin-bottom */
+}
+
+.urgent-harvest-container .mb-1\.5 {
+  margin-bottom: 0.25rem !important; /* Reduce margin-bottom */
+}
+
+/* Optimize flex-grow behavior for compact cards */
+.urgent-harvest-container .flex-grow {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Ensure images are properly sized */
+.urgent-harvest-container .h-28 {
+  height: 6rem !important; /* Slightly reduce image height */
+}
+
+/* AuthModal responsive improvements */
+@media (max-height: 600px) {
+  /* For very short screens, reduce modal padding */
+  .auth-modal-content {
+    padding: 1rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* For very small screens, ensure modal takes most of the width */
+  .auth-modal-container {
+    margin: 0.5rem !important;
+    max-width: calc(100vw - 1rem) !important;
+  }
+}
+
+/* Ensure proper touch targets on mobile */
+@media (max-width: 640px) {
+  .auth-modal-button {
+    min-height: 44px !important; /* iOS recommended touch target size */
+  }
+
+  .auth-modal-input {
+    min-height: 44px !important;
+  }
+
+  /* Improve spacing between form elements on mobile */
+  .auth-modal-form-group {
+    margin-bottom: 1.25rem !important;
+  }
+
+  /* Ensure OTP inputs are properly sized for touch */
+  .auth-modal-otp-input {
+    min-width: 40px !important;
+    min-height: 40px !important;
+  }
+}
+
+/* Handle mobile keyboard appearance */
+@media (max-width: 640px) and (max-height: 500px) {
+  /* When keyboard is likely open (short viewport) */
+  .auth-modal-container {
+    max-height: 90vh !important;
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .auth-modal-content {
+    padding: 0.75rem !important;
+  }
+}
+
+/* Prevent zoom on input focus for iOS */
+@media (max-width: 640px) {
+  .auth-modal-input {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+}
+
+/* Smooth scrolling for modal content */
+.auth-modal-content {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* iOS momentum scrolling */
+}
+
+/* Custom scrollbar for better UX */
+.auth-modal-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.auth-modal-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.auth-modal-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.auth-modal-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Ensure modal doesn't exceed viewport height and enables proper scrolling */
+.auth-modal-container {
+  max-height: calc(100vh - 2rem); /* Account for padding */
+  max-height: calc(100dvh - 2rem); /* Dynamic viewport height for mobile browsers */
+  min-height: 0; /* Allow flex shrinking */
+}
+
+/* Better focus management */
+.auth-modal-input:focus,
+.auth-modal-otp-input:focus {
+  scroll-margin-top: 2rem;
+  scroll-margin-bottom: 2rem;
+}
+
+/* Extra small screens (phones in portrait) */
+@media (max-width: 400px) {
+  .auth-modal-container {
+    margin: 0.25rem !important;
+    max-width: calc(100vw - 0.5rem) !important;
+    border-radius: 0.75rem !important;
+  }
+
+  .auth-modal-content {
+    padding: 0.75rem !important;
+  }
+
+  .auth-modal-form-group {
+    margin-bottom: 1rem !important;
+  }
+
+  /* Smaller OTP inputs for very small screens */
+  .auth-modal-otp-input {
+    min-width: 32px !important;
+    min-height: 32px !important;
+    font-size: 12px !important;
+  }
+
+  /* Ensure buttons are still touchable */
+  .auth-modal-button {
+    min-height: 40px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* Landscape orientation on small screens */
+@media (max-width: 640px) and (orientation: landscape) and (max-height: 500px) {
+  .auth-modal-container {
+    max-height: 95vh !important;
+    margin: 0.5rem !important;
+  }
+
+  .auth-modal-content {
+    padding: 0.5rem !important;
+  }
+
+  /* Reduce spacing in landscape mode */
+  .auth-modal-form-group {
+    margin-bottom: 0.75rem !important;
+  }
+}
+
+/* High DPI screens adjustments */
+@media (-webkit-min-device-pixel-ratio: 2) and (max-width: 640px) {
+  .auth-modal-otp-input {
+    border-width: 1px !important; /* Thinner borders on high DPI */
+  }
+}
+
+/* Additional responsive improvements for signup form */
+@media (max-width: 640px) {
+  /* Ensure proper spacing for form elements on mobile */
+  .auth-modal-form-group {
+    margin-bottom: 1rem !important;
+  }
+
+  /* Improve touch targets for buttons */
+  .auth-modal-button {
+    min-height: 44px !important;
+    font-size: 14px !important;
+  }
+
+  /* Ensure inputs are properly sized */
+  .auth-modal-input {
+    min-height: 44px !important;
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+
+  /* Better spacing for location selector */
+  .location-selector-card {
+    padding: 0.75rem !important;
+  }
+
+  /* Optimize grid layouts for mobile */
+  .signup-form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  /* Mobile-specific scrolling improvements */
+  .auth-modal-container {
+    max-height: calc(100vh - 1rem) !important;
+    max-height: calc(100dvh - 1rem) !important;
+  }
+
+  .auth-modal-content {
+    /* Ensure scrolling works on mobile */
+    overflow-y: scroll !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+}
+
+/* Tablet and small desktop adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .auth-modal-container {
+    max-width: 28rem !important; /* Slightly wider on tablets */
+  }
+
+  .auth-modal-content {
+    padding: 1.5rem !important;
+  }
+}
+
+/* Ensure proper scrolling behavior */
+.auth-modal-content {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  /* Ensure content can actually scroll */
+  min-height: 0;
+  height: 100%;
+}
+
+/* Focus management for better UX */
+.auth-modal-input:focus,
+.auth-modal-button:focus {
+  scroll-margin-top: 1rem;
+  scroll-margin-bottom: 1rem;
+}
+
+/* Prevent layout shifts during loading */
+.location-selector-card {
+  min-height: 120px;
+}
+
+/* Improve visual hierarchy on small screens */
+@media (max-width: 480px) {
+  .auth-modal-container {
+    margin: 0.5rem !important;
+    max-width: calc(100vw - 1rem) !important;
+    max-height: calc(100vh - 1rem) !important;
+    max-height: calc(100dvh - 1rem) !important;
+  }
+
+  /* Reduce heading sizes on very small screens */
+  .signup-form h1 {
+    font-size: 1.25rem !important;
+    line-height: 1.75rem !important;
+  }
+
+  /* Compact button text on small screens */
+  .auth-modal-button {
+    padding: 0.75rem 1rem !important;
+  }
+}
+
+/* Landscape orientation fixes for scrolling */
+@media (max-width: 640px) and (orientation: landscape) and (max-height: 500px) {
+  .auth-modal-container {
+    max-height: calc(100vh - 1rem) !important;
+    max-height: calc(100dvh - 1rem) !important;
+  }
+
+  .auth-modal-content {
+    padding: 0.5rem !important;
+    /* Force scrolling on landscape mobile */
+    overflow-y: scroll !important;
+  }
+}
+
+/* Fix for very short screens */
+@media (max-height: 600px) {
+  .auth-modal-container {
+    max-height: calc(100vh - 1rem) !important;
+    max-height: calc(100dvh - 1rem) !important;
+  }
+
+  .auth-modal-content {
+    padding: 0.75rem !important;
+  }
+}

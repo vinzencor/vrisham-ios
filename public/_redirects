@@ -1,0 +1,16 @@
+# Netlify redirects file for SPA routing
+# This ensures that all routes are handled by the React app
+# and prevents 404 errors on page refresh
+
+# Handle all routes by serving index.html
+/*    /index.html   200
+
+# Optional: Handle specific API routes if needed
+# /api/*  https://your-api-domain.com/api/:splat  200
+
+# Optional: Handle specific file extensions directly
+# *.js    /static/js/:splat   200
+# *.css   /static/css/:splat  200
+# *.png   /static/media/:splat 200
+# *.jpg   /static/media/:splat 200
+# *.svg   /static/media/:splat 200

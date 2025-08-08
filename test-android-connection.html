@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Android Connection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 200px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Android Connection Test</h1>
+        <p>Test if your Android app can connect to the SMS proxy server.</p>
+        
+        <h3>📱 Phone Number Test</h3>
+        <input type="tel" id="phoneNumber" placeholder="+919995580712" value="+919995580712">
+        <br>
+        <button onclick="testSendOTP()">📤 Test Send OTP</button>
+        <button onclick="testHealthCheck()">🏥 Test Health Check</button>
+        <button onclick="testAllEndpoints()">🔄 Test All Endpoints</button>
+        
+        <div id="result" class="result info">
+            Ready to test connection...
+            
+            Server URLs to test:
+            • http://192.168.1.10:3001 (Your machine IP)
+            • http://localhost:3001 (Local development)
+            • http://10.0.2.2:3001 (Android emulator)
+        </div>
+    </div>
+
+    <script>
+        const SERVER_URLS = [
+            'http://192.168.1.10:3001',
+            'http://localhost:3001',
+            'http://10.0.2.2:3001'
+        ];
+
+        function log(message, type = 'info') {
+            const result = document.getElementById('result');
+            const timestamp = new Date().toLocaleTimeString();
+            result.textContent += `\n[${timestamp}] ${message}`;
+            result.className = `result ${type}`;
+            result.scrollTop = result.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('result').textContent = 'Testing connection...\n';
+        }
+
+        async function testHealthCheck() {
+            clearLog();
+            log('🏥 Testing health check endpoints...');
+            
+            for (const serverUrl of SERVER_URLS) {
+                try {
+                    log(`Testing: ${serverUrl}/api/health`);
+                    
+                    const response = await fetch(`${serverUrl}/api/health`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        log(`✅ SUCCESS: ${serverUrl}`, 'success');
+                        log(`Response: ${JSON.stringify(data, null, 2)}`, 'success');
+                        return; // Stop on first success
+                    } else {
+                        log(`❌ HTTP ${response.status}: ${serverUrl}`, 'error');
+                    }
+                } catch (error) {
+                    log(`❌ ERROR: ${serverUrl} - ${error.message}`, 'error');
+                }
+            }
+            
+            log('❌ All health check endpoints failed!', 'error');
+        }
+
+        async function testSendOTP() {
+            clearLog();
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            
+            if (!phoneNumber) {
+                log('❌ Please enter a phone number', 'error');
+                return;
+            }
+            
+            log(`📤 Testing OTP send to: ${phoneNumber}`);
+            
+            for (const serverUrl of SERVER_URLS) {
+                try {
+                    log(`Testing: ${serverUrl}/api/send-otp`);
+                    
+                    const response = await fetch(`${serverUrl}/api/send-otp`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ phoneNumber }),
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok && data.success) {
+                        log(`✅ SUCCESS: OTP sent via ${serverUrl}`, 'success');
+                        log(`Response: ${JSON.stringify(data, null, 2)}`, 'success');
+                        log(`📱 Check your SMS for OTP!`, 'success');
+                        return; // Stop on first success
+                    } else {
+                        log(`❌ FAILED: ${serverUrl} - ${data.error || 'Unknown error'}`, 'error');
+                    }
+                } catch (error) {
+                    log(`❌ ERROR: ${serverUrl} - ${error.message}`, 'error');
+                }
+            }
+            
+            log('❌ All OTP send endpoints failed!', 'error');
+        }
+
+        async function testAllEndpoints() {
+            clearLog();
+            log('🔄 Testing all endpoints...');
+            
+            // Test health check first
+            await testHealthCheck();
+            
+            // Wait a moment
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Test OTP send
+            log('\n📤 Now testing OTP send...');
+            await testSendOTP();
+        }
+
+        // Auto-test on page load
+        window.onload = function() {
+            log('🚀 Page loaded. Click buttons to test connection.');
+            log('💡 If you see CORS errors, the server is running but needs network config.');
+            log('💡 If you see "Failed to fetch", check if server is running.');
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Date Logic Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <h1>Delivery Date Logic Test</h1>
+    <div id="results"></div>
+
+    <script>
+        // Simulate the delivery date logic
+        function getDeliveryInfoForItem(itemType, orderDate) {
+            const today = orderDate || new Date();
+            const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+            
+            const deliveryDate = new Date(today);
+            let daysToAdd = 1; // Default: next day delivery
+            let label = '';
+
+            if (itemType === 'pre-order') {
+                // Pre-order items typically take longer
+                daysToAdd = 3;
+                const targetDate = new Date(today);
+                targetDate.setDate(targetDate.getDate() + daysToAdd);
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                const dayName = days[targetDate.getDay()];
+                label = `Delivered by ${dayName}`;
+            } else {
+                // Regular items follow the standard logic
+                if (dayOfWeek === 0) { // Sunday
+                    daysToAdd = 2;
+                    label = 'Delivery by Tuesday';
+                } else { // Monday-Saturday
+                    daysToAdd = 1;
+                    label = 'Delivery by Tomorrow';
+                }
+            }
+
+            deliveryDate.setDate(deliveryDate.getDate() + daysToAdd);
+            const daysFromNow = Math.ceil((deliveryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+            return {
+                date: deliveryDate,
+                label,
+                daysFromNow
+            };
+        }
+
+        // Test the logic
+        function runTests() {
+            const resultsDiv = document.getElementById('results');
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            
+            resultsDiv.innerHTML = '<h2>Testing Delivery Date Logic</h2>';
+            
+            // Test for each day of the week
+            for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+                // Create a test date for each day of the week
+                const testDate = new Date();
+                testDate.setDate(testDate.getDate() - testDate.getDay() + dayOfWeek);
+                
+                // Test regular items
+                const regularItemInfo = getDeliveryInfoForItem('in-stock', testDate);
+                
+                // Test pre-order items
+                const preOrderItemInfo = getDeliveryInfoForItem('pre-order', testDate);
+                
+                const dayName = days[dayOfWeek];
+                const expectedRegular = dayOfWeek === 0 ? 'Delivery by Tuesday' : 'Delivery by Tomorrow';
+                const isCorrect = regularItemInfo.label === expectedRegular;
+                
+                resultsDiv.innerHTML += `
+                    <div class="test-result ${isCorrect ? 'success' : 'error'}">
+                        <strong>${dayName} Orders:</strong><br>
+                        Order Date: ${testDate.toDateString()}<br>
+                        Regular items: ${regularItemInfo.label} (Expected: ${expectedRegular}) ${isCorrect ? '✓' : '✗'}<br>
+                        Pre-order items: ${preOrderItemInfo.label}<br>
+                        Delivery date: ${regularItemInfo.date.toDateString()}<br>
+                        Days from order: ${regularItemInfo.daysFromNow}
+                    </div>
+                `;
+            }
+            
+            // Test current date
+            const now = new Date();
+            const currentInfo = getDeliveryInfoForItem('in-stock');
+            resultsDiv.innerHTML += `
+                <div class="test-result info">
+                    <strong>Current Date Test:</strong><br>
+                    Today: ${now.toDateString()} (${days[now.getDay()]})<br>
+                    Delivery: ${currentInfo.label}<br>
+                    Delivery Date: ${currentInfo.date.toDateString()}<br>
+                    Days from now: ${currentInfo.daysFromNow}
+                </div>
+            `;
+        }
+
+        // Run tests when page loads
+        runTests();
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SMS Proxy Connection Test</title>
+</head>
+<body>
+    <h1>SMS Proxy Connection Test</h1>
+    <button onclick="testHealth()">Test Health Endpoint</button>
+    <button onclick="testSMS()">Test SMS Endpoint</button>
+    <div id="results"></div>
+
+    <script>
+        async function testHealth() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<p>Testing health endpoint...</p>';
+            
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                results.innerHTML = `<h3>Health Test Result:</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                results.innerHTML = `<h3>Health Test Error:</h3><p style="color: red;">${error.message}</p>`;
+            }
+        }
+
+        async function testSMS() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<p>Testing SMS endpoint...</p>';
+            
+            try {
+                const response = await fetch('/api/send-sms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        phoneNumber: '+919876543210',
+                        message: 'Test message from connection test'
+                    })
+                });
+                
+                const data = await response.json();
+                results.innerHTML = `<h3>SMS Test Result:</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                results.innerHTML = `<h3>SMS Test Error:</h3><p style="color: red;">${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
