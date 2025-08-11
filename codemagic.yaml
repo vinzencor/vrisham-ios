@@ -4,25 +4,33 @@ workflows:
     max_build_duration: 60
     environment:
       vars:
-        XCODE_WORKSPACE: "ios/YourApp.xcworkspace"
-        XCODE_SCHEME: "Vrisham App"
+        XCODE_WORKSPACE: "ios/App.xcworkspace"
+        XCODE_SCHEME: "App"
+        APP_STORE_CONNECT_ISSUER_ID: 7ed17a9f-e39c-4b71-8aec-8ae25bc633dd
+        APP_STORE_CONNECT_KEY_IDENTIFIER: 3QB8N96NNN
+        APP_STORE_CONNECT_PRIVATE_KEY: |
+          -----BEGIN PRIVATE KEY-----
+          MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgcBcVs1KUmutJIwO9
+          Y6b52ugL2cCMEC9YZvnojDW8p0WgCgYIKoZIzj0DAQehRANCAARcG8eVAT8ibspF
+          iIu5Uv7ebeey4m/+q85qLWj8M1lkiGgVDXGdg0ZATwSDpQxAf3NaxwSodG/mLZsN
+          Cn2q9byX
+          -----END PRIVATE KEY-----
       xcode: latest
       cocoapods: default
     scripts:
       - name: Install dependencies
         script: |
           npm install
-          cd ios
+          cd ios/App
           pod install
       - name: Build iOS
         script: |
-          xcodebuild clean -workspace $XCODE_WORKSPACE -scheme $XCODE_SCHEME -sdk iphoneos -configuration Release archive -archivePath $HOME/Library/Developer/Xcode/Archives/YourApp.xcarchive
+          xcodebuild clean -workspace $XCODE_WORKSPACE -scheme $XCODE_SCHEME -sdk iphoneos -configuration Release archive -archivePath $HOME/Library/Developer/Xcode/Archives/App.xcarchive
+          xcodebuild -exportArchive -archivePath $HOME/Library/Developer/Xcode/Archives/App.xcarchive -exportPath build/ios -exportOptionsPlist ios/App/exportOptions.plist
 
     artifacts:
       - build/ios/**/*.ipa
 
     publishing:
       app_store_connect:
-        api_key_id: $APP_STORE_API_KEY_ID
-        issuer_id: $APP_STORE_ISSUER_ID
-        key: $APP_STORE_PRIVATE_KEY
+        submit_to_testflight: true
