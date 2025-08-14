@@ -7,7 +7,13 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "ionic:build": "vite build",
+    "ionic:serve": "vite",
+    "cap:sync": "ionic cap sync",
+    "cap:sync:ios": "ionic cap sync ios",
+    "cap:build:ios": "ionic cap build ios",
+    "cap:run:ios": "ionic cap run ios"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.0",

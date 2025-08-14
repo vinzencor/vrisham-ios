@@ -1,0 +1,8 @@
+{
+  "name": "vrisham-customer",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react",
+  "id": "vrisham-customer"
+}

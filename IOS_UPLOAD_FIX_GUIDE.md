@@ -91,6 +91,77 @@ xcodebuild -exportArchive -archivePath App.xcarchive -exportPath build -exportOp
 4. **Validate App Store Connect**: Ensure app record exists with correct bundle ID
 5. **Test API Key**: Verify API key has proper permissions and is not expired
 
+## Latest Fix Applied (2025-08-14)
+
+### Critical Issue Resolved: CODE_SIGNING_ALLOWED=NO
+**Problem**: The codemagic.yaml had `CODE_SIGNING_ALLOWED=NO` in the archive command, which prevented proper code signing and caused altool upload failures.
+
+**Solution Applied**:
+1. **Removed CODE_SIGNING_ALLOWED=NO**: This was preventing the app from being properly signed during archive
+2. **Fixed workspace path**: Changed from using variable `$XCODE_WORKSPACE` to direct path `App.xcworkspace` in build commands
+3. **Added automatic build number increment**: Added script to automatically increment build number to avoid "Version already exists" errors
+
+### Updated Build Process (Ionic CLI + Capacitor + iOS):
+```yaml
+- name: Install dependencies
+  script: |
+    npm install
+    npm install -g @ionic/cli         # Install Ionic CLI globally
+- name: Build web app and sync with Capacitor
+  script: |
+    ionic build                      # Build using Ionic CLI (calls vite build)
+    ionic cap sync ios               # Sync web assets to iOS native project using Ionic CLI
+    cd ios/App
+    pod install --repo-update        # Install iOS dependencies
+- name: Set up code signing
+  script: |
+    keychain initialize
+    app-store-connect fetch-signing-files $BUNDLE_ID --type IOS_APP_STORE --create
+    keychain add-certificates
+    xcode-project use-profiles
+- name: Increment build number
+  script: |
+    cd ios/App
+    BUILD_NUMBER=$(($(xcodebuild -showBuildSettings -workspace App.xcworkspace -scheme $XCODE_SCHEME | grep CURRENT_PROJECT_VERSION | tr -d 'CURRENT_PROJECT_VERSION =') + 1))
+    agvtool new-version -all $BUILD_NUMBER
+- name: Build iOS
+  script: |
+    cd ios/App
+    xcodebuild clean -workspace App.xcworkspace -scheme $XCODE_SCHEME -configuration Release
+    xcodebuild archive -workspace App.xcworkspace -scheme $XCODE_SCHEME -configuration Release -destination generic/platform=iOS -archivePath $CM_BUILD_DIR/App.xcarchive
+    xcodebuild -exportArchive -archivePath $CM_BUILD_DIR/App.xcarchive -exportPath $CM_BUILD_DIR/build/ios -exportOptionsPlist exportOptions.plist
+```
+
+### 🔋 **Capacitor Integration Explained**
+
+Your app is a **Capacitor hybrid app**, which means:
+
+1. **Web App**: Your frontend code (HTML/CSS/JS) built with `npm run build`
+2. **Capacitor Sync**: `npx cap sync ios` copies the web app into the iOS native container
+3. **Native iOS Build**: Standard Xcode build process creates the final iOS app
+4. **App Store Upload**: The native iOS app gets uploaded to TestFlight/App Store
+
+**Why Ionic CLI + Capacitor works better**:
+- **Ionic CLI** provides enhanced build tooling and better error handling
+- **Better iOS integration**: `ionic cap sync ios` handles iOS-specific optimizations
+- **Improved debugging**: Better error messages and build diagnostics
+- **Capacitor integration**: Seamless integration between web build and native sync
+- **Native container**: Creates a fully native iOS app that can be distributed through the App Store
+
+### 🔧 **Ionic CLI Commands Available**:
+```bash
+# Development
+ionic serve                    # Start development server
+ionic build                    # Build web app
+ionic cap sync ios            # Sync to iOS with optimizations
+ionic cap build ios           # Build and sync in one command
+ionic cap run ios             # Build, sync, and run on iOS device/simulator
+
+# Debugging
+ionic cap doctor              # Check setup and diagnose issues
+ionic info                    # Show environment information
+```
+
 ## Next Steps
 
 1. Commit the updated configuration files
