@@ -9,6 +9,7 @@ workflows:
         BUNDLE_ID: "com.vrisham.customerapp"
         APP_STORE_CONNECT_ISSUER_ID: 7ed17a9f-e39c-4b71-8aec-8ae25bc633dd
         APP_STORE_CONNECT_KEY_IDENTIFIER: 3QB8N96NNN
+        APP_STORE_CONNECT_TEAM_ID: 3QB8N96NNN
         APP_STORE_CONNECT_PRIVATE_KEY: |
           -----BEGIN PRIVATE KEY-----
           MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgcBcVs1KUmutJIwO9
@@ -32,7 +33,7 @@ workflows:
       - name: Set up code signing
         script: |
           keychain initialize
-          app-store-connect fetch-signing-files $BUNDLE_ID --type IOS_APP_STORE --create
+          app-store-connect fetch-signing-files $BUNDLE_ID --type IOS_APP_STORE --create --team-id $APP_STORE_CONNECT_TEAM_ID
           keychain add-certificates
           xcode-project use-profiles
       - name: Increment build number
