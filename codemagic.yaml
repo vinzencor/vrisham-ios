@@ -39,8 +39,13 @@ workflows:
       - name: Increment build number
         script: |
           cd ios/App
-          BUILD_NUMBER=$(($(xcodebuild -showBuildSettings -workspace App.xcworkspace -scheme $XCODE_SCHEME | grep CURRENT_PROJECT_VERSION | tr -d 'CURRENT_PROJECT_VERSION =') + 1))
-          agvtool new-version -all $BUILD_NUMBER
+          # Use timestamp-based build number to ensure uniqueness
+          TIMESTAMP_BUILD=$(date +%Y%m%d%H%M)
+          echo "Setting build number to: $TIMESTAMP_BUILD"
+          # Set the new build number
+          agvtool new-version -all $TIMESTAMP_BUILD
+          # Verify the change
+          agvtool what-version
       - name: Build iOS
         script: |
           cd ios/App
