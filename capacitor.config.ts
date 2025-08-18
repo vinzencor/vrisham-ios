@@ -5,12 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Vrisham Customer',
   webDir: 'dist',
   server: {
-    androidScheme: 'https',
-    allowNavigation: [
-      'http://192.168.1.10:3001',
-      'http://localhost:3001',
-      'http://10.0.2.2:3001'
-    ]
+    androidScheme: 'https'
   },
   plugins: {
     SplashScreen: {
@@ -20,9 +15,9 @@ const config: CapacitorConfig = {
     }
   },
   android: {
-    allowMixedContent: true,
+    allowMixedContent: false,
     captureInput: true,
-    webContentsDebuggingEnabled: true
+    webContentsDebuggingEnabled: false
   }
 };
 

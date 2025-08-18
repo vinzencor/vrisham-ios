@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(MARKETING_VERSION)</string>
+	<string>1.0.2</string>
 	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<string>3</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -45,5 +45,45 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+
+	<!-- Privacy Usage Descriptions -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Vrisham needs access to your location to provide accurate delivery services and show nearby stores.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Vrisham needs access to your location to provide accurate delivery services and show nearby stores.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Vrisham needs camera access to scan product barcodes and take photos for customer support.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Vrisham needs photo library access to select images for customer support and profile pictures.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Vrisham needs access to contacts to help you share the app with friends and family.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Vrisham needs microphone access for voice messages to customer support.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>This allows us to provide you with personalized offers and improve your shopping experience.</string>
+
+	<!-- Network Security -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<false/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>firebase.googleapis.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<false/>
+				<key>NSExceptionMinimumTLSVersion</key>
+				<string>TLSv1.2</string>
+			</dict>
+			<key>firebaseapp.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<false/>
+				<key>NSExceptionMinimumTLSVersion</key>
+				<string>TLSv1.2</string>
+			</dict>
+		</dict>
+	</dict>
 </dict>
 </plist>

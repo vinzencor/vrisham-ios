@@ -1,9 +1,9 @@
 // Algolia configuration for vrisham_customer app
 export const ALGOLIA_CONFIG = {
-  appId: '2OI7IZCUVQ',
-  searchApiKey: '02421055a7940f66269a3e3c479e9a0e',
-  writeApiKey: '92631faca035b778920e48ad003a2add', // Only for admin operations, not used in client
-  indexName: 'products', // Default index name for products
+  appId: import.meta.env.VITE_ALGOLIA_APP_ID || '2OI7IZCUVQ',
+  searchApiKey: import.meta.env.VITE_ALGOLIA_SEARCH_API_KEY || '02421055a7940f66269a3e3c479e9a0e',
+  writeApiKey: import.meta.env.VITE_ALGOLIA_WRITE_API_KEY || '', // Only for admin operations, not used in client
+  indexName: import.meta.env.VITE_ALGOLIA_INDEX_NAME || 'products', // Default index name for products
   
   // Search configuration
   searchSettings: {
